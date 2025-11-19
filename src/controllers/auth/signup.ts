@@ -4,13 +4,7 @@ import bcrypt from "bcryptjs";
 export const signup = async (c : Context) => {
     try {
         // required values
-        const body = await c.req.json<{
-            firstName: string;
-            lastName: string;
-            email: string;
-            password: string;
-        }>();
-        const {firstName, lastName, email, password} = body;
+        const {firstName, lastName, email, password} = c.get("parsedValue");
         // prisma client 
         const prisma = createPrisma(c.env.DATABASE_URL)
         // check user already exist
