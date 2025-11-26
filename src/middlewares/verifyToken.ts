@@ -1,14 +1,16 @@
 import { MiddlewareHandler } from "hono";
 import { auth } from "hono/utils/basic-auth";
 import { verifyToken } from "../jwt/verify";
+import { getCookie } from "hono/cookie";
+import { errors } from "jose";
 
 export const tokenValidation:MiddlewareHandler = async (c,next) => {
     try{
         // checking authorization 
-        const authHeader = c.req.header("Authorization");
-        if (!authHeader) return c.json({error:"Authorization header missing"},401);
+        const token = getCookie(c, "token");
+        if (!token) return c.json({message:"Unauthorized"},401);
         // token validation
-        const token= authHeader.replace("Bearer ","");
+        
         const payload = await verifyToken(token,c.env.SECRET);
         if (!payload) return c.json({error:"Invalid token"},400);
         // set payload 
