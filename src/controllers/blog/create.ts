@@ -1,7 +1,7 @@
 import { Context } from "hono";
 import { createPrisma } from "../../lib/prisma";
 
-export const createBlog = async (c : Context) => {
+export const publishBlog = async (c : Context) => {
     try{
         // values
         const body = await c.req.json<{
@@ -19,6 +19,7 @@ export const createBlog = async (c : Context) => {
                 authorId: user.userId,
                 title,
                 content,
+                published: true
             }
         });
         // response
