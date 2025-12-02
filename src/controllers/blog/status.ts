@@ -7,16 +7,21 @@ export const status = async (c:Context) => {
         const body = await c.req.json<{
             id: string
             published: boolean
+            description: string
         }>();
-        const { id, published } = body;
+        const { id, published,description } = body;
         // prisma client
+        const user = c.get("user")
+        const authorId = user.userId
         const prisma = createPrisma(c.env.DATABASE_URL);
         // query
         await prisma.blog.update({
             where: {
-                id
+                id,
+                authorId
             },
             data:{
+                description,
                 published
             }
         });
